@@ -1,0 +1,8 @@
+
+.table-cutting-plan {text-align: center; border-collapse: collapse; width: 100%}
+.table-cutting-plan tr td {padding: 4px; border-top: 1px solid darkgray;}
+.table-cutting-plan .saw {background-color: lightpink; width: 10px;}
+.table-cutting-plan .head-th {width: 100px;}
+.table-cutting-plan .gray-tr {background-color: aliceblue;}
+.table-cutting-plan .vline {border-left: 1px solid darkgray; border-right: 1px solid darkgray;}
+.table-cutting-plan .total {text-align: right;}
