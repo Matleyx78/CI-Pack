@@ -70,9 +70,9 @@ max-width: 1260px;
     border-radius: 6px 0 6px 6px;
 }
 
-/*.navbar-brand{color:#ff7500}
-.navbar-inverse{color:#ff7500}
-.navbar-text{color:#ff7500}
+/*.navbar-brand{color:#ff7500}*/
+.navbar-inverse{background-color: #1e30a5; border-color: #1e30a5}
+/*.navbar-text{color:#ff7500}
 .navbar-nav{color:#ff7500}
 .navbar-nav>li>a{color:#ff7500}
 .dropdown-menu>li>a{color:#ff7500}
