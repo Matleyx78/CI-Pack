@@ -1,5 +1,5 @@
 </div>     
-<div id="footer" style="background-color: #1dbdfa; vertical-align: middle;">
+<div id="footer" style="background-color: #1e30a5; vertical-align: middle;">
   <div class="container">
     <p class="text-muted navbar-text"><em>&copy; 2018 www.chiuna.it - <?php echo CI_VERSION;?></em></p>
   </div>
