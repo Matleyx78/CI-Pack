@@ -195,11 +195,11 @@ class Crud extends Admin_Controller {
 
 
 
-class ' . ucfirst($this->controllername) . ' extends MY_Controller
+class ' . ucfirst($this->controllername) . ' extends Admin_Controller
     {
         public function __construct() {
                 parent::__construct();
-                if(!$this->is_logged_in())redirect(\'login\');
+                //if(!$this->is_logged_in())redirect(\'login\');
                     
             ';
         if (!empty($library_list)) {
