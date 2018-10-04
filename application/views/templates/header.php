@@ -42,15 +42,16 @@ if(! $this->session->userdata('user_id')){
             
 
           <ul class="nav navbar-nav">
-              <p class="navbar-text"><?php echo "".$name.""; ?></p>
-                           <?php if($this->session->userdata('identity')){
-	echo '<li><a href="';
-                          echo site_url('auth/logout/');
-                          echo '"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>';
-
-//                         print_r($this->session->userdata('liv'));
-
-                          }?>
+                  <?php 
+                  if($this->ion_auth->logged_in())
+                      {
+                      echo "<p class=\"navbar-text\">".$this->session->email." </p>";
+                      echo "<li>".anchor('auth/logout', ' Logout','><span class="glyphicon glyphicon-log-out"></span')."</li>";
+                      }else
+                          {
+                          echo "<li>".anchor('auth/login', ' Login','><span class="glyphicon glyphicon-log-out"></span')."</li>";
+                          };
+                   ?>
               <?php if($this->ion_auth->is_admin()){?>               
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
@@ -111,11 +112,7 @@ if($this->ion_auth->logged_in()){?>
                                     <li role="separator" class="divider"></li>
                                     <li><?php echo anchor('example_logged', 'Example logged');?></li>
                                 </ul>
-                            </li>                            
-<?php
-} 
-if(!$this->ion_auth->logged_in()){?>
-                                    <li><?php echo anchor('auth/login', 'Login');?></li>                         
+                            </li>                                                     
 <?php } ?>
           </ul>
         </div><!--/.nav-collapse -->
