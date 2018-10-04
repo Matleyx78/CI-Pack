@@ -6,5 +6,13 @@ Starter Pack for Codeigniter
 CRUD Generator by any table in database (model, controller and 4 views)
   All file generated is ready for ION_AUTH and bootstrap theme
   
-Unzip in the Codeigniter directory (please the index.php is in application/web directory
+Unzip in the Codeigniter directory (please the index.php is in application/web directory)
+
+index.php
+config.php
+database.php
+sql
+table
+libraries session ion_aut database
+helper url
   
