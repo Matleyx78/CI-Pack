@@ -51,7 +51,7 @@
                                 <ul class="dropdown-menu">
                                     <li><?php echo anchor('crud', 'Crud Generator');?></li>
                                     <li role="separator" class="divider"></li>
-                                    <li><?php echo anchor('ControllerAdmin', 'AdminMenu1');?></li>
+                                    <li><?php echo anchor('auth', 'User List');?></li>
                                     <li><?php echo anchor('ControllerAdmin', 'AdminMenu1');?></li>
                                     <li><?php echo anchor('ControllerAdmin', 'AdminMenu1');?></li>
                                     <li class="dropdown-submenu">
