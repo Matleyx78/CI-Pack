@@ -575,7 +575,7 @@ $view .= '
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label for="'.$fktcname.'" class="control-label">'.$fktlabel.'</label>
                             <div class="form-group">
-                                <select name="'.$fktcname.'" class="form-group">
+                                <select name="'.$fktcname.'" class="form-control">
                                     <?php foreach($'.$fkttname.' as $'.$fktletter.'): ?>
                                         <option value="<?php echo $'.$fktletter.'[\''.$fktrcname.'\']; ?>" class="form-control" id="'.$fktcname.'"><?php echo $'.$fktletter.'[\''.$fktrcname.'\']; ?></option>
                                     <?php endforeach;?>
@@ -730,7 +730,7 @@ $view_edit .= '
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label for="'.$fktcname.'" class="control-label">'.$fktlabel.'</label>
                             <div class="form-group">
-                                <select name="'.$fktcname.'" class="form-group">
+                                <select name="'.$fktcname.'" class="form-control">
                                     <?php foreach($'.$fkttname.' as $'.$fktletter.'): ?>
                                         <option value="<?php echo $'.$fktletter.'[\''.$fktrcname.'\']; ?>" <?php if ($id_' . $this->sname . '[\''.$field_name.'\'] == $'.$fktletter.'[\''.$fktrcname.'\']) echo "selected=\"selected\"";?> class="form-control" id="'.$fktcname.'"><?php echo $'.$fktletter.'[\''.$fktrcname.'\']; ?></option>
                                     <?php endforeach;?>
