@@ -4,6 +4,7 @@
 class Crud extends Admin_Controller {
     private $tname; //table name
     private $controllername; // controller name
+    private $ind_htm_name;
     private $fname; // form name
     private $sname; // singol name
     private $form_title; // form tite
@@ -23,6 +24,7 @@ class Crud extends Admin_Controller {
     private $header_data = '';
     private $footer_data = 'footer';
     private $controller_data = '';
+    private $ind_htm_data = '';
     private $model_data = '';
     private $create_data = '';
     private $edit_data = '';
@@ -91,6 +93,7 @@ class Crud extends Admin_Controller {
             $this->fname = $this->input->post("fname");
             $this->sname = $this->input->post("sname");
             $this->modelname = $this->tname . '_model';
+            $this->ind_htm_name = 'index';
             $this->listviewname = 'listall_' . $this->controllername;
             $this->list_viewpagname = 'list_' . $this->controllername;
             $this->create_viewname = 'create_' . $this->sname;
@@ -138,6 +141,7 @@ class Crud extends Admin_Controller {
             $this->listp_data = $view_listp = $this->build_view_listp($fields);
             $this->header_data = $view_header = $this->build_header($fields);
             $this->footer_data = $view_footer = $this->build_footer($fields);
+            $this->ind_htm_data = $view_htm = $this->build_htm();
             $data['model'] = $model;
             $data['controller'] = $controller;
             $data['view_create'] = $view_create;
@@ -146,6 +150,7 @@ class Crud extends Admin_Controller {
             $data['view_listp'] = $view_listp;
             $data['view_header'] = $view_header;
             $data['view_footer'] = $view_footer;
+            $data['view_htm'] = $view_htm;
             //name for each file
             $data['controllername'] = $this->controllername;
             $data['modelname'] = $this->modelname;
@@ -153,6 +158,7 @@ class Crud extends Admin_Controller {
             $data['listviewp'] = $this->list_viewpagname;
             $data['create_viewname'] = $this->create_viewname;
             $data['edit_viewname'] = $this->edit_viewname;
+            $data['htm_name'] = $this->ind_htm_name;
             $data['header'] = $this->header;
             $data['footer'] = $this->footer;
             $data['tname'] = $this->tname;
@@ -662,6 +668,25 @@ $view .= '
 ';
         return $view;
     }
+
+    function build_htm() {
+
+        $htm_data = '<!DOCTYPE html>
+<html>
+<head>
+	<title>403 Forbidden</title>
+</head>
+<body>
+<!--Build by CRUD Generator-->
+<p>Directory access is forbidden.</p>
+
+</body>
+</html>
+    ';
+        return $htm_data;
+
+    }
+
 
     function build_view_edit($fields = NULL,$fktrovate = NULL) {
         if ($fields == NULL) {
@@ -1318,6 +1343,7 @@ $model .= '         $this->dbcrud->where(\'PARAMETRO\', $par);
         $edit_view_date = $this->edit_data;
         $create_list_date = $this->list_data;
         $create_listp_date = $this->listp_data;
+        $htm_file_data = $this->ind_htm_data;
         $header_date = $this->header_data;
         $footer_date = $this->footer_data;
         $controller_file_name = 'controllers/' . ucfirst($this->controllername) . '.php';
@@ -1325,7 +1351,8 @@ $model .= '         $this->dbcrud->where(\'PARAMETRO\', $par);
         $createview_file_name = 'views/' . $this->tname . '/' . $this->create_viewname . '.php';
         $editview_file_name = 'views/' . $this->tname . '/' . $this->edit_viewname . '.php';
         $listview_file_name = 'views/' . $this->tname . '/' . $this->listviewname . '.php';
-        $listviewp_file_name = 'views/' . $this->tname . '/' . $this->list_viewpagname . '.php';
+        $listviewp_file_name = 'views/' . $this->tname . '/' . $this->list_viewpagname . '.php';        
+        $htm_file_name = 'views/' . $this->tname . '/' . $this->ind_htm_name . '.html';
         //$header_file_name = 'views/' . $this->header . '.php';
         //$footer_file_name = 'views/' . $this->footer . '.php';
         $this->zip->add_data($controller_file_name, $controller_date);
@@ -1334,6 +1361,7 @@ $model .= '         $this->dbcrud->where(\'PARAMETRO\', $par);
         $this->zip->add_data($editview_file_name, $edit_view_date);
         $this->zip->add_data($listview_file_name, $create_list_date);
         $this->zip->add_data($listviewp_file_name, $create_listp_date);
+        $this->zip->add_data($htm_file_name, $htm_file_data);
         //header and footer
         $this->zip->add_data($header_file_name, $header_date);
 //        $this->zip->add_data($footer_file_name, $footer_date);
