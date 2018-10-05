@@ -1371,21 +1371,6 @@ $model .= '         $this->dbcrud->where(\'PARAMETRO\', $par);
         $this->zip->download($this->controllername . '.zip');
         //force_download($name, $data);
     }
-    public function campo() {
-        $data['db_name'] = $this->dbcrud->database;
-        $result = $this->dbcrud->query('SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA="'.$data['db_name'].'";');
-        $data['tabelle'] = $result->result_array();
-        $data['campi'] = $this->dbcrud->field_data('commesse');
-        $query2 = $this->dbcrud->query('SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE information_schema.TABLE_CONSTRAINTS.CONSTRAINT_TYPE = \'FOREIGN KEY\' AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA = \'serramentisti\' AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME = \'commesse\'');
-        $fk = $query2->result_array();
-        foreach ($fk as $f)
-            {
-                $query3 = $this->dbcrud->query('SELECT COLUMN_NAME,CONSTRAINT_NAME,REFERENCED_TABLE_SCHEMA,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = \'serramentisti\' AND CONSTRAINT_NAME = \''.$f['CONSTRAINT_NAME'].'\'');
-                $data['fk'][] = $query3->result_array();
-            }
-        //$data['campi'] = $this->dbcrud->field_data('dettaglicom');
-        $this->load->view('prova/prova', $data);
-    }
  
 }
 ?>
