@@ -49,6 +49,8 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
+                                    <li><?php echo anchor('example_admin', 'Example Admin');?></li>
+                                    <li role="separator" class="divider"></li>
                                     <li><?php echo anchor('crud', 'Crud Generator');?></li>
                                     <li role="separator" class="divider"></li>
                                     <li><?php echo anchor('auth', 'User List');?></li>
