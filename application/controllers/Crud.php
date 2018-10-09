@@ -46,31 +46,13 @@ class Crud extends Admin_Controller {
         $this->load->helper('download');
         $this->created_date = date('Y-m-d ');
     }
-    /**
-     * Functon index
-     * 
-     * load the form and process
-     * 
-     * @auther shabeeb <mail@shabeebk.com>
-     * @createdon  17-06-2014
-     * @
-     * 
-     * @param type 
-     * @return type
-     * exceptions
-     * 
-     */
+
     public function index()
     {    
         $db_name = $this->dbcrud->database;
         $result = $this->dbcrud->query('SELECT TABLE_NAME AS TABLES FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA="'.$db_name.'";');
         $result = $result->result_array();
-        
-
-        
         $data['name1'] = $db_name;
-        
-        
         $data['result'] = $result;
 
         $this->load->view('crud/index', $data);
@@ -108,6 +90,7 @@ class Crud extends Admin_Controller {
                     $this->tbl_pk = $field_name;
                 }
             }
+
             // Foreign Keys
             $query2 = $this->dbcrud->query('SELECT * FROM information_schema.TABLE_CONSTRAINTS WHERE information_schema.TABLE_CONSTRAINTS.CONSTRAINT_TYPE = \'FOREIGN KEY\' AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA = \''.$db_name.'\' AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME = \''.$this->tname.'\'');
                 $foreignkeys = $query2->result_array();
@@ -520,6 +503,7 @@ $controller .= '
         $view = '<?php if (!defined(\'BASEPATH\')) exit(\'No direct script access allowed\');
 
 $this->load->view(\'templates/header\');
+
 //$arr = get_defined_vars();
 //echo \'<pre>\';
 //print_r($_ci_vars);
@@ -618,6 +602,24 @@ $view .= '
                     </div>';                                    
                                     }else
                                         {
+                                        if ($field->type == "tinyint")
+                                            {
+$view .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                            <div class="form-group">
+                                <select name="'.$field_name.'" class="form-control">
+                                    <option value="0" class="form-control" id="'.$field_name.'">No</option>
+                                    <option value="1" class="form-control" id="'.$field_name.'">Si</option>
+                                            
+                                </select>
+                            </div>    
+                        </div>                            
+                    </div>
+';                                            
+                                            }else
+                                                {
         $view .= '
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -626,24 +628,76 @@ $view .= '
                                     <input type="text" name="'.$field_name.'" value="<?php echo $this->input->post(\''.$field_name.'\'); ?>" class="form-control" id="'.$field_name.'" />
                             </div>
                         </div>                            
-                    </div>';                                        
+                    </div>';                                                
+                                                }
+                                        
                                         }
                             
                             
                             
                             }    
                     }else
-                        {
+                            {
+                                if($field_type == "date")
+                                    {
         $view .= '
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label for="'.$field_name.'" class="control-label">'.$label.'</label>
                             <div class="form-group">
-                                <input type="text" name="'.$field_name.'" value="<?php echo $this->input->post(\''.$field_name.'\'); ?>" class="form-control" id="'.$field_name.'" />
+                                <div class="input-group date" id="'.$field_name.'">
+                                    <input type="text" name="'.$field_name.'" value="<?php echo $this->input->post(\''.$field_name.'\'); ?>" class="form-control" id="'.$field_name.'" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $(\'#'.$field_name.'\').datetimepicker({
+                                        locale: \'it\',
+                                        format: \'YYYY-MM-DD\'
+                                    });
+                                });
+                            </script>
+                        </div>                            
+                    </div>';                                    
+                                    }else
+                                        {
+                                        if ($field->type == "tinyint")
+                                            {
+$view .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                            <div class="form-group">
+                                <select name="'.$field_name.'" class="form-control">
+                                    <option value="0" class="form-control" id="'.$field_name.'">No</option>
+                                    <option value="1" class="form-control" id="'.$field_name.'">Si</option>
+                                            
+                                </select>
+                            </div>    
+                        </div>                            
+                    </div>
+';                                            
+                                            }else
+                                                {
+        $view .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                            <div class="form-group">
+                                    <input type="text" name="'.$field_name.'" value="<?php echo $this->input->post(\''.$field_name.'\'); ?>" class="form-control" id="'.$field_name.'" />
                             </div>
                         </div>                            
-                    </div>';                         
-                        }
+                    </div>';                                                
+                                                }
+                                        
+                                        }
+                            
+                            
+                            
+                            }
                 
                 
 
@@ -792,7 +846,23 @@ $view_edit .= '
                         </div>                            
                     </div>';                                    
                                     }else
-                                        {
+                                        {if($field_type == "tinyint")
+                                            {
+$view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$field_name.'</label>
+                            <div class="form-group">
+                                <select name="'.$field_name.'" class="form-control">
+                                        <option value="0" <?php if ($id_' . $this->sname . '[\''.$field_name.'\'] == 0) echo "selected=\"selected\"";?> class="form-control" id="'.$field_name.'">No</option>
+                                        <option value="1" <?php if ($id_' . $this->sname . '[\''.$field_name.'\'] == 1) echo "selected=\"selected\"";?> class="form-control" id="'.$field_name.'">Si</option>
+                                </select>
+                            </div>
+                        </div>                            
+                    </div>
+';                                            
+                                            }else
+                                                {
         $view_edit .= '
                             <div class="row clearfix">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -801,14 +871,59 @@ $view_edit .= '
                                                 <input type="text" name="'.$field_name.'" value="<?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?>" class="form-control" id="'.$field_name.'" />
                                         </div>
                                 </div>                            
-                            </div>';                                        
+                            </div>';                                                
+                                                }
+                                        
                                         }
                             
                             
                             
                             }    
                     }else
-                        {
+                            {
+                                if($field_type == "date")
+                                    {
+        $view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                                <div class="form-group">
+                                    <div class="input-group date" id="'.$field_name.'">
+                                        <input type="text" name="'.$field_name.'" value="<?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?>" class="form-control" id="'.$field_name.'" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $(\'#'.$field_name.'\').datetimepicker({
+                                        locale: \'it\',
+                                        format: \'YYYY-MM-DD\'
+                                    });
+                                });
+                            </script>                             
+
+                        </div>                            
+                    </div>';                                    
+                                    }else
+                                        {if($field->type == "tinyint")
+                                            {
+$view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$field_name.'</label>
+                            <div class="form-group">
+                                <select name="'.$field_name.'" class="form-control">
+                                        <option value="0" <?php if ($id_' . $this->sname . '[\''.$field_name.'\'] == 0) echo "selected=\"selected\"";?> class="form-control" id="'.$field_name.'">No</option>
+                                        <option value="1" <?php if ($id_' . $this->sname . '[\''.$field_name.'\'] == 1) echo "selected=\"selected\"";?> class="form-control" id="'.$field_name.'">Si</option>
+                                </select>
+                            </div>
+                        </div>                            
+                    </div>
+';                                            
+                                            }else
+                                                {
         $view_edit .= '
                             <div class="row clearfix">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -817,8 +932,14 @@ $view_edit .= '
                                                 <input type="text" name="'.$field_name.'" value="<?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?>" class="form-control" id="'.$field_name.'" />
                                         </div>
                                 </div>                            
-                            </div>';                        
-                        }
+                            </div>';                                                
+                                                }
+                                        
+                                        }
+                            
+                            
+                            
+                            } 
                 
                 
 
