@@ -8,13 +8,13 @@ $this->load->view('templates/header');
 ?>
 <div class="row">
 <div class="col-md-6">
-    <div style="text-align: center"><h3>Genera Crud</h3></div><br/>
+    <div style="text-align: center"><h3>Crud</h3></div><br/>
 <?php echo form_open('crud/generator',array("class"=>"form-horizontal")); ?>    
 <div class="row">
 	<div class="form-group">
 		<label for="tipo" class="col-md-2 control-label">Tabella</label>
 		<div class="col-md-4">
-                    <select id="table_name" name="tname">
+                    <select id="table_name" name="tname" class="form-control">
                         <?php foreach($result as $row){ ?>
                         <option value="<?php echo $row['TABLES']; ?>"><?php echo $row['TABLES']; ?></option>
                         <?php } ?>
