@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS `ioa_groups`;
+DROP TABLE IF EXISTS `groups`;
 
 #
 # Table structure for table 'groups'
 #
 
-CREATE TABLE `ioa_groups` (
+CREATE TABLE `groups` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
   `description` varchar(100) NOT NULL,
@@ -15,19 +15,19 @@ CREATE TABLE `ioa_groups` (
 # Dumping data for table 'groups'
 #
 
-INSERT INTO `ioa_groups` (`id`, `name`, `description`) VALUES
+INSERT INTO `groups` (`id`, `name`, `description`) VALUES
      (1,'admin','Administrator'),
      (2,'members','General User');
 
 
 
-DROP TABLE IF EXISTS `ioa_users`;
+DROP TABLE IF EXISTS `users`;
 
 #
 # Table structure for table 'users'
 #
 
-CREATE TABLE `ioa_users` (
+CREATE TABLE `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ip_address` varchar(45) NOT NULL,
   `username` varchar(100) NULL,
@@ -53,17 +53,17 @@ CREATE TABLE `ioa_users` (
 # Dumping data for table 'users'
 #
 
-INSERT INTO `ioa_users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
+INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
      ('1','127.0.0.1','administrator','$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36','','admin@admin.com','',NULL,'1268889823','1268889823','1', 'Admin','istrator','ADMIN','0');
 
 
-DROP TABLE IF EXISTS `ioa_users_groups`;
+DROP TABLE IF EXISTS `users_groups`;
 
 #
 # Table structure for table 'users_groups'
 #
 
-CREATE TABLE `ioa_users_groups` (
+CREATE TABLE `users_groups` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) unsigned NOT NULL,
   `group_id` mediumint(8) unsigned NOT NULL,
@@ -71,22 +71,22 @@ CREATE TABLE `ioa_users_groups` (
   KEY `fk_users_groups_users1_idx` (`user_id`),
   KEY `fk_users_groups_groups1_idx` (`group_id`),
   CONSTRAINT `uc_users_groups` UNIQUE (`user_id`, `group_id`),
-  CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `ioa_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_users_groups_groups1` FOREIGN KEY (`group_id`) REFERENCES `ioa_groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_users_groups_groups1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `ioa_users_groups` (`id`, `user_id`, `group_id`) VALUES
+INSERT INTO `users_groups` (`id`, `user_id`, `group_id`) VALUES
      (1,1,1),
      (2,1,2);
 
 
-DROP TABLE IF EXISTS `ioa_login_attempts`;
+DROP TABLE IF EXISTS `login_attempts`;
 
 #
 # Table structure for table 'login_attempts'
 #
 
-CREATE TABLE `ioa_login_attempts` (
+CREATE TABLE `login_attempts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ip_address` varchar(45) NOT NULL,
   `login` varchar(100) NOT NULL,
