@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Crud extends Admin_Controller {
+class Crud extends Loggeds_Controller {
     private $tname; //table name
     private $controllername; // controller name
     private $ind_htm_name;
@@ -184,7 +184,7 @@ class Crud extends Admin_Controller {
 
 
 
-class ' . ucfirst($this->controllername) . ' extends Admin_Controller
+class ' . ucfirst($this->controllername) . ' extends Loggeds_Controller
     {
         public function __construct() {
                 parent::__construct();
@@ -482,7 +482,7 @@ $controller .= '
             $params = array(
                 \'CAMPOOBSOL\' => 1,
                 );
-            $this->Ar_abb_tip_uti_model->update_si_abb_tu($data[\'id_' . $this->sname . '\'][\'' . $this->tbl_pk . '\'],$params);            
+            $this->' . ucfirst($this->modelname) . '->update_' . $this->sname . '($data[\'id_' . $this->sname . '\'][\'' . $this->tbl_pk . '\'],$params);            
             
             
             //$this->' . ucfirst($this->modelname) . '->delete_' . $this->sname . '_by_id($id);
@@ -1174,7 +1174,7 @@ class ' . ucfirst($this->modelname) . ' extends CI_Model {
      
     function get_all_' . $this->fname . '()
         {
-        //$query = $this->dbcrud->get_where(\'' . $this->tname . '\',array(\'CAMPOOBSOLESCENZA\'=>FALSE));
+        //$query = $this->db->get_where(\'' . $this->tname . '\',array(\'CAMPOOBSOLESCENZA\'=>FALSE));
 ';
         if ($fktrovate != NULL)
             {
@@ -1186,18 +1186,18 @@ class ' . ucfirst($this->modelname) . ' extends CI_Model {
                 $fkttname = $fkt[0]['REFERENCED_TABLE_NAME'];
                 $fktrcname = $fkt[0]['REFERENCED_COLUMN_NAME'];
                 
-$model .= '         $this->dbcrud->join(\''.$fkttname.'\', \''.$fkttname.'.'.$fktrcname.' = ' . $this->tname . '.'.$fktcname.'\');               
+$model .= '         $this->db->join(\''.$fkttname.'\', \''.$fkttname.'.'.$fktrcname.' = ' . $this->tname . '.'.$fktcname.'\');               
 ';
                 }
             }else
                 {
-$model .= '         //$this->dbcrud->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
+$model .= '         //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
 ';
                 }
 
-$model .= '         // $this->dbcrud->order_by("data", "desc");
-        //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
-        $query = $this->dbcrud->get(\'' . $this->tname . '\');       
+$model .= '         // $this->db->order_by("data", "desc");
+        //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+        $query = $this->db->get(\'' . $this->tname . '\');       
         return $query->result_array();
         }
         ';
@@ -1206,17 +1206,17 @@ $model .= '         // $this->dbcrud->order_by("data", "desc");
 
     function count_all_' . $this->fname . '()
     {
-        //$this->dbcrud->where(\'clcodcol\',$id);
-        $this->dbcrud->from(\'' . $this->tname . '\');
-        //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
-        //$this->dbcrud->get_where(\'' . $this->tname . '\',array(\'CAMPOOBSOLESCENZA\'=>FALSE));
+        //$this->db->where(\'clcodcol\',$id);
+        $this->db->from(\'' . $this->tname . '\');
+        //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+        //$this->db->get_where(\'' . $this->tname . '\',array(\'CAMPOOBSOLESCENZA\'=>FALSE));
             
-        return $this->dbcrud->count_all_results();
+        return $this->db->count_all_results();
     }
     
     function fetch_' . $this->fname . '($limit,$offset)
     {
-        $this->dbcrud->limit($limit,$offset);
+        $this->db->limit($limit,$offset);
 ';
         if ($fktrovate != NULL)
             {
@@ -1228,18 +1228,18 @@ $model .= '         // $this->dbcrud->order_by("data", "desc");
                 $fkttname = $fkt[0]['REFERENCED_TABLE_NAME'];
                 $fktrcname = $fkt[0]['REFERENCED_COLUMN_NAME'];
                 
-$model .= '         $this->dbcrud->join(\''.$fkttname.'\', \''.$fkttname.'.'.$fktrcname.' = ' . $this->tname . '.'.$fktcname.'\');               
+$model .= '         $this->db->join(\''.$fkttname.'\', \''.$fkttname.'.'.$fktrcname.' = ' . $this->tname . '.'.$fktcname.'\');               
 ';
                 }
             }else
                 {
-$model .= '         //$this->dbcrud->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
+$model .= '         //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
 ';
                 }
 
-$model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
-        $this->dbcrud->from(\'' . $this->tname . '\');
-        $query = $this->dbcrud->get();
+$model .= '         //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+        $this->db->from(\'' . $this->tname . '\');
+        $query = $this->db->get();
 
             if ($query->num_rows() > 0){
                 return $query->result_array();
@@ -1249,10 +1249,10 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
     }
     
     function search_' . $this->fname . '_by_id($id) {
-        $this->dbcrud->select(\'*\');
-        $this->dbcrud->from(\'' . $this->tname . '\');
-        $this->dbcrud->like(\'' . $this->tbl_pk . '\',$id);
-        $query = $this->dbcrud->get();
+        $this->db->select(\'*\');
+        $this->db->from(\'' . $this->tname . '\');
+        $this->db->like(\'' . $this->tbl_pk . '\',$id);
+        $query = $this->db->get();
         if ($query->num_rows() > 0){
             return $query->result_array();
         }else{
@@ -1262,7 +1262,7 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
 
     function get_' . $this->sname . '_by_id($id)
         {
-        return $this->dbcrud->get_where(\'' . $this->tname . '\',array(\'' . $this->tbl_pk . '\'=>$id))->row_array();   
+        return $this->db->get_where(\'' . $this->tname . '\',array(\'' . $this->tbl_pk . '\'=>$id))->row_array();   
         }
         ';
         
@@ -1270,8 +1270,8 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
             
     function add_' . $this->sname . '($params) 
         {
-        $this->dbcrud->insert(\'' . $this->tname . '\',$params);
-        return $this->dbcrud->insert_id();
+        $this->db->insert(\'' . $this->tname . '\',$params);
+        return $this->db->insert_id();
         }
         ';
 
@@ -1279,8 +1279,8 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
             
     function update_' . $this->sname . '($id,$params) 
         {
-            $this->dbcrud->where(\'' . $this->tbl_pk . '\',$id);
-            $response = $this->dbcrud->update(\'' . $this->tname . '\',$params);
+            $this->db->where(\'' . $this->tbl_pk . '\',$id);
+            $response = $this->db->update(\'' . $this->tname . '\',$params);
             if($response)
             {
                 return "' . $this->sname . ' updated successfully";
@@ -1296,7 +1296,7 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
             
     function delete_' . $this->sname . '_by_id($id) 
         {
-            $response = $this->dbcrud->delete(\'' . $this->tname . '\',array(\'' . $this->tbl_pk . '\'=>$id));
+            $response = $this->db->delete(\'' . $this->tname . '\',array(\'' . $this->tbl_pk . '\'=>$id));
             if($response)
             {
                 return "' . $this->sname . ' deleted successfully";
@@ -1306,8 +1306,8 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
                 return "Error occuring while deleting ' . $this->sname . '";
             }
 
-//        $this->dbcrud->where(\'' . $this->tbl_pk . '\',$id);
-//        $this->dbcrud->update(\'' . $this->tname . '\',array(\'CAMPOOBSOLESCENZA\'=>FALSE));
+//        $this->db->where(\'' . $this->tbl_pk . '\',$id);
+//        $this->db->update(\'' . $this->tname . '\',array(\'CAMPOOBSOLESCENZA\'=>FALSE));
         }
         ';
 
@@ -1315,12 +1315,12 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
             
     function get_last_' . $this->sname . '() 
         {
-            $this->dbcrud->select(\'*\');
-            $this->dbcrud->from(\'' . $this->tname . '\');
-            $this->dbcrud->order_by(\'' . $this->tbl_pk . '\', "desc");
-            $this->dbcrud->limit(1);
-            //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
-            $query = $this->dbcrud->get();        
+            $this->db->select(\'*\');
+            $this->db->from(\'' . $this->tname . '\');
+            $this->db->order_by(\'' . $this->tbl_pk . '\', "desc");
+            $this->db->limit(1);
+            //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+            $query = $this->db->get();        
 
             return $query->row_array();
         }
@@ -1330,10 +1330,10 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
             
     function get_all_' . $this->sname . '_by_QUALCOSA($par) 
         {
-            $this->dbcrud->select(\'*\');
-            $this->dbcrud->from(\'' . $this->tname . '\');
-            //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
-            $this->dbcrud->like(\'CAMPODACONFRONTARE\',$par);
+            $this->db->select(\'*\');
+            $this->db->from(\'' . $this->tname . '\');
+            //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+            $this->db->like(\'CAMPODACONFRONTARE\',$par);
 ';
         if ($fktrovate != NULL)
             {
@@ -1345,17 +1345,17 @@ $model .= '         //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
                 $fkttname = $fkt[0]['REFERENCED_TABLE_NAME'];
                 $fktrcname = $fkt[0]['REFERENCED_COLUMN_NAME'];
                 
-$model .= '         $this->dbcrud->join(\''.$fkttname.'\', \''.$fkttname.'.'.$fktrcname.' = ' . $this->tname . '.'.$fktcname.'\');               
+$model .= '         $this->db->join(\''.$fkttname.'\', \''.$fkttname.'.'.$fktrcname.' = ' . $this->tname . '.'.$fktcname.'\');               
 ';
                 }
             }else
                 {
-$model .= '         //$this->dbcrud->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
+$model .= '         //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
 ';
                 }
 
-$model .= '         $this->dbcrud->order_by(\'CAMPOPERORDINARE\', "desc");
-            $query = $this->dbcrud->get();
+$model .= '         $this->db->order_by(\'CAMPOPERORDINARE\', "desc");
+            $query = $this->db->get();
 
             return $query->result_array();
         }
@@ -1365,8 +1365,8 @@ $model .= '         $this->dbcrud->order_by(\'CAMPOPERORDINARE\', "desc");
             
     function get_all_' . $this->sname . '_QUALCOSA($par) 
         {
-            $this->dbcrud->select(\'*\');
-            $this->dbcrud->from(\'' . $this->tname . '\');
+            $this->db->select(\'*\');
+            $this->db->from(\'' . $this->tname . '\');
 ';
         if ($fktrovate != NULL)
             {
@@ -1378,19 +1378,19 @@ $model .= '         $this->dbcrud->order_by(\'CAMPOPERORDINARE\', "desc");
                 $fkttname = $fkt[0]['REFERENCED_TABLE_NAME'];
                 $fktrcname = $fkt[0]['REFERENCED_COLUMN_NAME'];
                 
-$model .= '         $this->dbcrud->join(\''.$fkttname.'\', \''.$fkttname.'.'.$fktrcname.' = ' . $this->tname . '.'.$fktcname.'\');               
+$model .= '         $this->db->join(\''.$fkttname.'\', \''.$fkttname.'.'.$fktrcname.' = ' . $this->tname . '.'.$fktcname.'\');               
 ';
                 }
             }else
                 {
-$model .= '         //$this->dbcrud->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
+$model .= '         //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
 ';
                 }
 
-$model .= '         $this->dbcrud->where(\'PARAMETRO\', $par);
-            //$this->dbcrud->where(\'CAMPOOBSOLESCENZA\',FALSE);
-            $this->dbcrud->order_by(\'' . $this->tname . '.CAMPO\', "desc");
-            $query = $this->dbcrud->get();
+$model .= '         $this->db->where(\'PARAMETRO\', $par);
+            //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+            $this->db->order_by(\'' . $this->tname . '.CAMPO\', "desc");
+            $query = $this->db->get();
 
             return $query->result_array();
         }
@@ -1494,4 +1494,3 @@ $model .= '         $this->dbcrud->where(\'PARAMETRO\', $par);
     }
  
 }
-?>
