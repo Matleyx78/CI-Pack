@@ -243,6 +243,55 @@ $controller .= '
         $this->load->view(\'' . $this->tname . '/' . $this->listviewname . '\',$data);
 
     }';
+
+$controller .= '
+
+    function report_index()
+    {
+        $data[\'' . $this->fname . '\'] = $this->' . ucfirst($this->modelname) . '->get_all_' . $this->fname . '();
+            
+            $this->load->library(\'pdf\');
+            $this->pdf = new Pdf();
+            $this->pdf->AddPage();
+            $this->pdf->AliasNbPages();
+            $this->pdf->SetLeftMargin(15);
+            $this->pdf->SetRightMargin(15);
+            $this->pdf->SetFillColor(200,200,200);
+            $this->pdf->SetFont(\'Arial\',\'\', 9);
+            $this->pdf->Cell(180,15,\'Report index of ' . $this->fname . '\',0,0,\'C\');
+            $this->pdf->Ln();
+';            
+        foreach ($fields as $field) {
+            $field_name = $field->name;
+            $pk = $field->primary_key;
+            $label = str_replace('_', ' ', $field_name);
+
+                $controller .= ' 
+                        $this->pdf->Cell(10,7,"' . $field_name . '",1,0,\'C\');';
+            }
+$controller .= '
+            $this->pdf->Ln(10);
+            
+            foreach($data[\'' . $this->fname . '\'] as $k)
+                {
+';
+        foreach ($fields as $field) {
+            $field_name = $field->name;
+            $pk = $field->primary_key;
+            $label = str_replace('_', ' ', $field_name);
+
+                $controller .= ' 
+                            $this->pdf->Cell(10,7,$k[\'' . $field_name . '\'],1,0,\'C\');';
+            
+        }
+
+$controller .= '
+                $this->pdf->Ln();
+                }
+        ob_end_clean();
+    $this->pdf->Output("' . $this->fname . '.pdf", \'I\');
+    }
+';
         $controller .= ' 
        
      /**
@@ -625,7 +674,7 @@ $view .= '
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label for="'.$field_name.'" class="control-label">'.$label.'</label>
                             <div class="form-group">
-			    	<?php echo form_error('.$field_name.'); ?>
+                                    <?php echo form_error('.$field_name.'); ?>
                                     <input type="text" name="'.$field_name.'" value="<?php echo $this->input->post(\''.$field_name.'\'); ?>" class="form-control" id="'.$field_name.'" />
                             </div>
                         </div>                            
