@@ -184,7 +184,7 @@ class Crud extends Loggeds_Controller {
 
 
 
-class ' . ucfirst($this->controllername) . ' extends Loggeds_Controller
+class ' . ucfirst($this->controllername) . ' extends Logged_Controller
     {
         public function __construct() {
                 parent::__construct();
