@@ -674,7 +674,7 @@ $view .= '
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label for="'.$field_name.'" class="control-label">'.$label.'</label>
                             <div class="form-group">
-                                    <?php echo form_error('.$field_name.'); ?>
+                                    <?php echo form_error(\''.$field_name.'\'); ?>
                                     <input type="text" name="'.$field_name.'" value="<?php echo $this->input->post(\''.$field_name.'\'); ?>" class="form-control" id="'.$field_name.'" />
                             </div>
                         </div>                            
