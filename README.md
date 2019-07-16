@@ -27,7 +27,7 @@ table
 
 
 autoload.php
-  $autoload['libraries'] = array('session','database','ion_auth');
+  $autoload['libraries'] = array('session','database','ion_auth','menu',);
   $autoload['helper'] = array('url',);
   
   
