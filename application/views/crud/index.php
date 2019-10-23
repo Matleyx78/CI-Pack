@@ -45,6 +45,14 @@ $this->load->view('templates/header');
 
 			</div>
 	</div>
+            	<div class="form-group">
+		<label for="data" class="col-md-2 control-label">Campo Obsolescenza</label>
+		<div class="col-md-4">
+			<input type="text" name="obsofield" value="<?php echo ($this->input->post('obsofield')); ?>" class="form-control" id="obsofield" />
+			
+
+			</div>
+	</div>    
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
 <!--			<button type="submit" class="btn btn-success">Genera</button>-->
