@@ -7,8 +7,9 @@ class Crud extends Loggeds_Controller {
     private $ind_htm_name;
     private $fname; // form name
     private $sname; // singol name
-    private $form_title; // form tite
+    private $form_title; // form tite    
     private $modelname;// model tite
+    private $obsolfield;// model tite
     private $listviewname;
     private $list_viewpagname;
     private $create_viewname;
@@ -68,9 +69,17 @@ class Crud extends Loggeds_Controller {
         if ($this->form_validation->run() === FALSE) {
             
         } else {
+            if ($this->input->post("obsofield") != '' OR $this->input->post("obsofield") != NULL)
+                {
+                    $campoobsolescenza = $this->input->post("obsofield");
+                }else
+                    {
+                        $campoobsolescenza = 'CAMPOOBSOLESCENZA';
+                    }
             $tblowercase = strtolower($this->input->post("tname"));
             $this->tname = $tblowercase;
             $cname = $this->input->post("cname");
+            $this->obsolfield = $campoobsolescenza;
             $this->controllername = str_replace(' ', '_', $cname);
             $this->fname = $this->input->post("fname");
             $this->sname = $this->input->post("sname");
@@ -184,7 +193,7 @@ class Crud extends Loggeds_Controller {
 
 
 
-class ' . ucfirst($this->controllername) . ' extends Logged_Controller
+class ' . ucfirst($this->controllername) . ' extends Loggeds_Controller
     {
         public function __construct() {
                 parent::__construct();
@@ -529,7 +538,7 @@ $controller .= '
         if(isset($data[\'id_' . $this->sname . '\'][\'' . $this->tbl_pk . '\']))
         {
             $params = array(
-                \'CAMPOOBSOL\' => 1,
+                \'' . $this->obsolfield . '\' => 1,
                 );
             $this->' . ucfirst($this->modelname) . '->update_' . $this->sname . '($data[\'id_' . $this->sname . '\'][\'' . $this->tbl_pk . '\'],$params);            
             
@@ -614,7 +623,7 @@ $view .= '
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label for="'.$fktcname.'" class="control-label">'.$fktlabel.'</label>
                             <div class="form-group">
-                                <select name="'.$fktcname.'" id="'.$fktcname.'" class="form-control">
+                                <select name="'.$fktcname.'" class="form-control">
                                     <?php foreach($'.$fkttname.' as $'.$fktletter.'): ?>
                                         <option value="<?php echo $'.$fktletter.'[\''.$fktrcname.'\']; ?>" class="form-control" id="'.$fktcname.'"><?php echo $'.$fktletter.'[\''.$fktrcname.'\']; ?></option>
                                     <?php endforeach;?>
@@ -674,7 +683,7 @@ $view .= '
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label for="'.$field_name.'" class="control-label">'.$label.'</label>
                             <div class="form-group">
-                                    <?php echo form_error(\''.$field_name.'\'); ?>
+                                    <?php echo form_error('.$field_name.'); ?>
                                     <input type="text" name="'.$field_name.'" value="<?php echo $this->input->post(\''.$field_name.'\'); ?>" class="form-control" id="'.$field_name.'" />
                             </div>
                         </div>                            
@@ -1246,7 +1255,7 @@ $model .= '         //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = '
                 }
 
 $model .= '         // $this->db->order_by("data", "desc");
-        //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+        //$this->db->where(\'' . $this->obsolfield . '\',FALSE);
         $query = $this->db->get(\'' . $this->tname . '\');       
         return $query->result_array();
         }
@@ -1258,7 +1267,7 @@ $model .= '         // $this->db->order_by("data", "desc");
     {
         //$this->db->where(\'clcodcol\',$id);
         $this->db->from(\'' . $this->tname . '\');
-        //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+        //$this->db->where(\'' . $this->obsolfield . '\',FALSE);
         //$this->db->get_where(\'' . $this->tname . '\',array(\'CAMPOOBSOLESCENZA\'=>FALSE));
             
         return $this->db->count_all_results();
@@ -1287,7 +1296,7 @@ $model .= '         //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = '
 ';
                 }
 
-$model .= '         //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+$model .= '         //$this->db->where(\'' . $this->obsolfield . '\',FALSE);
         $this->db->from(\'' . $this->tname . '\');
         $query = $this->db->get();
 
@@ -1369,7 +1378,7 @@ $model .= '         //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
             $this->db->from(\'' . $this->tname . '\');
             $this->db->order_by(\'' . $this->tbl_pk . '\', "desc");
             $this->db->limit(1);
-            //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+            //$this->db->where(\'' . $this->obsolfield . '\',FALSE);
             $query = $this->db->get();        
 
             return $query->row_array();
@@ -1382,7 +1391,7 @@ $model .= '         //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
         {
             $this->db->select(\'*\');
             $this->db->from(\'' . $this->tname . '\');
-            //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+            //$this->db->where(\'' . $this->obsolfield . '\',FALSE);
             $this->db->like(\'CAMPODACONFRONTARE\',$par);
 ';
         if ($fktrovate != NULL)
@@ -1438,7 +1447,7 @@ $model .= '         //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = '
                 }
 
 $model .= '         $this->db->where(\'PARAMETRO\', $par);
-            //$this->db->where(\'CAMPOOBSOLESCENZA\',FALSE);
+            //$this->db->where(\'' . $this->obsolfield . '\',FALSE);
             $this->db->order_by(\'' . $this->tname . '.CAMPO\', "desc");
             $query = $this->db->get();
 
@@ -1534,7 +1543,7 @@ $model .= '         $this->db->where(\'PARAMETRO\', $par);
         $this->zip->add_data($listviewp_file_name, $create_listp_date);
         $this->zip->add_data($htm_file_name, $htm_file_data);
         //header and footer
-        $this->zip->add_data($header_file_name, $header_date);
+        //$this->zip->add_data($header_file_name, $header_date);
 //        $this->zip->add_data($footer_file_name, $footer_date);
 // Write the zip file to a folder on your server. Name it "my_backup.zip"
         $this->zip->archive('temp/' . $this->controllername . '.zip');
