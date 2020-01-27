@@ -21,12 +21,12 @@ class Menu {
                     
             $htmlmenu .= $this->part1();
             $htmlmenu .= $this->part2();
-            $htmlmenu .= $this->part3();
+            $htmlmenu .= $this->partAdmin();
             $htmlmenu .= "                                      </ul>";
-            $htmlmenu .= $this->part4();
-            $htmlmenu .= $this->part5();
-            $htmlmenu .= $this->part6();
-            $htmlmenu .= $this->part7();
+            $htmlmenu .= $this->partFree();
+            $htmlmenu .= $this->partGroup();
+            $htmlmenu .= $this->partAllLogged();
+            $htmlmenu .= $this->partFinal();
             
             return $htmlmenu;
         }
@@ -71,7 +71,7 @@ $part2 = "                          <li>".anchor('auth/login', ' Login','><span 
             return $part2;            
         }
 
-    function part3()
+    function partAdmin()
         {
             $part3 ="";
             if($this->ci->ion_auth->is_admin())
@@ -109,7 +109,7 @@ $part3 = "                          <li class=\"dropdown\">
             return $part3;            
         }
 
-    function part4()
+    function partFree()
         {
             $part4 ="";
 $part4 = "                          <ul class=\"nav navbar-nav navbar-right\">
@@ -125,7 +125,7 @@ $part4 = "                          <ul class=\"nav navbar-nav navbar-right\">
             return $part4;            
         }
 
-    function part5()
+    function partGroup()
         {
             $part5 ="";
             if($this->ci->ion_auth->in_group(2))
@@ -144,7 +144,7 @@ $part5 = "                  <li class=\"dropdown\">
             return $part5;            
         }
 
-    function part6()
+    function partAllLogged()
         {
             $part6 ="";
             if($this->ci->ion_auth->logged_in())
@@ -163,7 +163,7 @@ $part6 = "              <li class=\"dropdown\">
             return $part6;            
         }
 
-    function part7()
+    function partFinal()
         {
             $part7 ="";
 $part7 = "                                    </ul>
