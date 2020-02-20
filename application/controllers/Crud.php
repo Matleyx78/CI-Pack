@@ -14,6 +14,7 @@ class Crud extends Loggeds_Controller {
     private $list_viewpagname;
     private $create_viewname;
     private $edit_viewname;
+    private $viewdetail_viewname;
     private $tbl_pk;
     private $first_min_no = 5;
     private $style_col = 4;
@@ -29,6 +30,7 @@ class Crud extends Loggeds_Controller {
     private $model_data = '';
     private $create_data = '';
     private $edit_data = '';
+    private $viewdetail_data = '';
     private $list_data = '';
     private $listp_data = '';
     private $library_list = array("form_validation", "session");
@@ -88,7 +90,8 @@ class Crud extends Loggeds_Controller {
             $this->listviewname = 'listall_' . $this->controllername;
             $this->list_viewpagname = 'list_' . $this->controllername;
             $this->create_viewname = 'create_' . $this->sname;
-            $this->edit_viewname = 'edit_' . $this->sname;
+            $this->edit_viewname = 'edit_' . $this->sname;            
+            $this->viewdetail_viewname = 'view_' . $this->sname;
             $fields = $this->dbcrud->field_data($this->tname);
             if (empty($fields)) {
                 die("Table not existing");
@@ -115,13 +118,15 @@ class Crud extends Loggeds_Controller {
                 {
                     $this->controller_data = $controller = $this->build_controller($fields,$fkfound);
                     $this->create_data = $view_create = $this->build_view_create($fields,$fkfound);
-                    $this->edit_data = $view_edit = $this->build_view_edit($fields,$fkfound);
+                    $this->edit_data = $view_edit = $this->build_view_edit($fields,$fkfound);                    
+                    $this->viewdetail_data = $view_viewdetail = $this->build_view_view($fields,$fkfound);
                     $this->model_data = $model = $this->build_model($fields,$fkfound);
                 }else
                     {
                         $this->controller_data = $controller = $this->build_controller($fields);
                         $this->create_data = $view_create = $this->build_view_create($fields);
-                        $this->edit_data = $view_edit = $this->build_view_edit($fields);
+                        $this->edit_data = $view_edit = $this->build_view_edit($fields);                    
+                        $this->viewdetail_data = $view_viewdetail = $this->build_view_view($fields);
                         $this->model_data = $model = $this->build_model($fields);
                     }            
 
@@ -138,6 +143,7 @@ class Crud extends Loggeds_Controller {
             $data['controller'] = $controller;
             $data['view_create'] = $view_create;
             $data['view_edit'] = $view_edit;
+            $data['view_viewdetail'] = $view_viewdetail;
             $data['view_list'] = $view_list;
             $data['view_listp'] = $view_listp;
             $data['view_header'] = $view_header;
@@ -150,6 +156,7 @@ class Crud extends Loggeds_Controller {
             $data['listviewp'] = $this->list_viewpagname;
             $data['create_viewname'] = $this->create_viewname;
             $data['edit_viewname'] = $this->edit_viewname;
+            $data['viewdetail_viewname'] = $this->viewdetail_viewname;
             $data['htm_name'] = $this->ind_htm_name;
             $data['header'] = $this->header;
             $data['footer'] = $this->footer;
@@ -356,7 +363,7 @@ $controller .= '
             $data[\'message\'] = \'Svuota il campo ricerca e premi Cerca per ricaricare i dati\';
             $this->load->view(\'' . $this->tname . '/' . $this->list_viewpagname . '\',$data);
         }else{
-            redirect($this->index());
+            redirect(\'' . $this->controllername . '/' . $this->fname . '\');
         }
     }
 
@@ -418,7 +425,7 @@ $controller .= '
                     );
     
         $' . $this->sname . '_id = $this->' . ucfirst($this->modelname) . '->add_' . $this->sname . '($params);
-            redirect(\'' . $this->controllername . '/index\');
+            redirect(\'' . $this->controllername . '/' . $this->fname . '\');
         }
         else
         {
@@ -440,6 +447,44 @@ $controller .= '
     } 
 
 
+/**
+     * Functon view
+     * edit form
+     * 
+     * @auther ' . $this->auther . ' <' . $this->auther_mail . '>
+     * @createdon   : ' . $this->created_date . '
+     * 
+     */
+    function view_' . $this->sname . '($id) {
+        
+';
+        if ($fktrovate != NULL)
+            {
+            foreach ($fktrovate as $fkt)
+                {
+                $fktkname = $fkt[0]['CONSTRAINT_NAME'];
+                $fktcname = $fkt[0]['COLUMN_NAME'];
+                $fkttschema = $fkt[0]['REFERENCED_TABLE_SCHEMA'];
+                $fkttname = $fkt[0]['REFERENCED_TABLE_NAME'];
+                $fktrcname = $fkt[0]['REFERENCED_COLUMN_NAME'];
+                
+        $controller .= ' $data[\''.$fkttname.'\'] = $this->' . ucfirst($fkttname) . '_model->get_all_' . $fkttname . '();
+            ';
+                }
+            }
+        
+$controller .= '
+
+        // check if the ' . $this->sname . ' exists before trying to edit it
+        $data[\'id_' . $this->sname . '\'] = $this->' . ucfirst($this->modelname) . '->get_' . $this->sname . '_by_id($id);
+        
+        if(isset($data[\'id_' . $this->sname . '\'][\'' . $this->tbl_pk . '\']))
+            {
+                $this->load->view(\'' . $this->tname . '/' . $this->viewdetail_viewname . '\',$data);
+        }
+        else
+            show_error(\'The ' . $this->sname . ' you are trying to view does not exist.\');
+    } 
 
 /**
      * Functon edit
@@ -506,7 +551,7 @@ $controller .= '
     );
                 
                 $this->' . ucfirst($this->modelname) . '->update_' . $this->sname . '($id,$params);            
-                redirect(\'' . $this->controllername . '/index\');
+                redirect(\'' . $this->controllername . '/' . $this->fname . '\');
             }
             else
             {
@@ -544,13 +589,16 @@ $controller .= '
             
             
             //$this->' . ucfirst($this->modelname) . '->delete_' . $this->sname . '_by_id($id);
-            redirect(\'' . $this->controllername . '/index\');
+            redirect(\'' . $this->controllername . '/' . $this->fname . '\');
         }
         else
             show_error(\'The ' . $this->sname . ' you are trying to delete does not exist.\');
     
 	}';
-        $controller .= '  
+        $controller .= ' 
+//  POST CRUD
+
+
 }';
         return $controller;
     }
@@ -800,7 +848,175 @@ $view .= '
 
     }
 
+    function build_view_view($fields = NULL,$fktrovate = NULL) {
+        if ($fields == NULL) {
+            return FALSE;
+        }
+        $view_edit = '<?php if (!defined(\'BASEPATH\')) exit(\'No direct script access allowed\');
 
+$this->load->view(\'templates/header\');
+
+//$arr = get_defined_vars();
+//echo \'<pre>\';
+//print_r($_ci_vars);
+//echo \'</pre>\';
+
+?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">view ' . $this->sname . '</a>
+                    </div>    
+                    <ul class="nav navbar-nav navbar-right">
+                                <li><a href="<?php echo site_url(\'' . $this->controllername . '/edit_' . $this->sname . '/\'.$id_' . $this->sname . '[\'' . $this->tbl_pk . '\']); ?>"><span class="glyphicon glyphicon-edit"></span> edit</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">                     
+
+
+                    ';
+
+
+        foreach ($fields as $field) {
+            $havefk = 2000;
+            $field_name = $field->name;
+            $field_type = substr($field->type, 0, 4);
+            $pk = $field->primary_key;
+            if ($pk != 1) {             //se non è una chiave primaria
+                $label = str_replace('_', ' ', $field_name);
+                
+                if ($fktrovate != NULL)     //se sono state trovate delle fk
+                    {
+                    foreach ($fktrovate as $key=>$value)        //per tutte le chiavi trovate
+                        {
+                        $fktcname = $value[0]['COLUMN_NAME'];
+                            if ($fktcname == $field_name)       //se il campo ha una fk, segna la chiave
+                                {
+                                $havefk = $key;
+                                }
+                        }
+                    if ($havefk != 2000)                       // se ha la fk
+                        {
+                        
+                $fktkname = $fktrovate[$havefk][0]['CONSTRAINT_NAME'];
+                $fktcname = $fktrovate[$havefk][0]['COLUMN_NAME'];
+                $fkttschema = $fktrovate[$havefk][0]['REFERENCED_TABLE_SCHEMA'];
+                $fkttname = $fktrovate[$havefk][0]['REFERENCED_TABLE_NAME'];
+                $fktrcname = $fktrovate[$havefk][0]['REFERENCED_COLUMN_NAME'];
+                $fktlabel = str_replace('_', ' ', $fktcname);
+                $fktletter = substr($fktrcname, 0, 2);
+                
+$view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$fktcname.'" class="control-label">'.$fktlabel.'</label>
+                                <p><?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?></p>
+                        </div>                            
+                    </div>
+';                        
+                        }else       // se non ha la fk
+                            {
+                                if($field_type == "date")
+                                    {
+        $view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                                <p><?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?></p>
+                        </div>                            
+                    </div>';                                    
+                                    }else
+                                        {if($field_type == "tinyint")
+                                            {
+$view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                                <p><?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?></p>
+                        </div>                            
+                    </div>
+';                                            
+                                            }else
+                                                {
+        $view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                                <p><?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?></p>
+                        </div>                            
+                    </div>';                                                
+                                                }
+                                        
+                                        }
+                            
+                            
+                            
+                            }    
+                    }else
+                            {
+                                if($field_type == "date")
+                                    {
+        $view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                                <p><?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?></p>
+                        </div>                            
+                    </div>';                                    
+                                    }else
+                                        {if($field->type == "tinyint")
+                                            {
+$view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                                <p><?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?></p>
+                        </div>                            
+                    </div>
+';                                            
+                                            }else
+                                                {
+        $view_edit .= '
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label for="'.$field_name.'" class="control-label">'.$label.'</label>
+                                <p><?php echo ($this->input->post(\''.$field_name.'\') ? $this->input->post(\''.$field_name.'\') : $id_' . $this->sname . '[\''.$field_name.'\']); ?></p>
+                        </div>                            
+                    </div>';                                                
+                                                }
+                                        
+                                        }
+                            
+                            
+                            
+                            } 
+                
+                
+
+            }
+        }                
+        
+        $view_edit .= '
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php $this->load->view(\'templates/footer\');?>
+';
+        return $view_edit;
+    }    
+
+    
+    
     function build_view_edit($fields = NULL,$fktrovate = NULL) {
         if ($fields == NULL) {
             return FALSE;
@@ -1455,7 +1671,29 @@ $model .= '         $this->db->where(\'PARAMETRO\', $par);
         }
         ';       
 
-        $model .= ' }';
+       $model .= '
+            
+    function is_present_' . $this->sname . '_id($id) 
+        {
+            $record = $this->get_' . $this->sname . '_by_id($id);
+            if($record)
+            {
+                return $record;
+            }
+            else
+            {
+                return FALSE;
+            }
+        }
+        '; 
+       
+        $model .= ' 
+//  POST CRUD
+
+
+
+
+}';
         return $model;
     }
     function build_header($params) {
@@ -1520,7 +1758,8 @@ $model .= '         $this->db->where(\'PARAMETRO\', $par);
         $controller_date = $this->controller_data;
         $model_date = $this->model_data;
         $create_view_date = $this->create_data;
-        $edit_view_date = $this->edit_data;
+        $edit_view_date = $this->edit_data;        
+        $viewdetail_view_date = $this->viewdetail_data;
         $create_list_date = $this->list_data;
         $create_listp_date = $this->listp_data;
         $htm_file_data = $this->ind_htm_data;
@@ -1530,6 +1769,7 @@ $model .= '         $this->db->where(\'PARAMETRO\', $par);
         $model_file_name = 'models/' . ucfirst($this->modelname) . '.php';
         $createview_file_name = 'views/' . $this->tname . '/' . $this->create_viewname . '.php';
         $editview_file_name = 'views/' . $this->tname . '/' . $this->edit_viewname . '.php';
+        $viewdetailview_file_name = 'views/' . $this->tname . '/' . $this->viewdetail_viewname . '.php';
         $listview_file_name = 'views/' . $this->tname . '/' . $this->listviewname . '.php';
         $listviewp_file_name = 'views/' . $this->tname . '/' . $this->list_viewpagname . '.php';        
         $htm_file_name = 'views/' . $this->tname . '/' . $this->ind_htm_name . '.html';
@@ -1539,6 +1779,7 @@ $model .= '         $this->db->where(\'PARAMETRO\', $par);
         $this->zip->add_data($model_file_name, $model_date);
         $this->zip->add_data($createview_file_name, $create_view_date);
         $this->zip->add_data($editview_file_name, $edit_view_date);
+        $this->zip->add_data($viewdetailview_file_name, $viewdetail_view_date);
         $this->zip->add_data($listview_file_name, $create_list_date);
         $this->zip->add_data($listviewp_file_name, $create_listp_date);
         $this->zip->add_data($htm_file_name, $htm_file_data);
