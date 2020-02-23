@@ -1679,17 +1679,17 @@ class ' . ucfirst($this->modelname) . ' extends CI_Model {
                 $fkttname = $fkt[0]['REFERENCED_TABLE_NAME'];
                 $fktrcname = $fkt[0]['REFERENCED_COLUMN_NAME'];
 
-                $model .= '         $this->db->join(\'' . $fkttname . '\', \'' . $fkttname . '.' . $fktrcname . ' = ' . $this->tname . '.' . $fktcname . '\');               
+                $model .= '            $this->db->join(\'' . $fkttname . '\', \'' . $fkttname . '.' . $fktrcname . ' = ' . $this->tname . '.' . $fktcname . '\');               
 ';
                 }
             }
         else
             {
-            $model .= '         //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
+            $model .= '            //$this->db->join(\'ALTRATABELLA\', \'ALTRATABELLA.CAMPO = ' . $this->tname . '.CAMPO\');               
 ';
             }
 
-        $model .= '         $this->db->where(\'PARAMETRO\', $par);
+        $model .= '            $this->db->where(\'PARAMETRO\', $par);
             //$this->db->where(\'' . $this->obsolfield . '\',FALSE);
             $this->db->order_by(\'' . $this->tname . '.CAMPO\', "desc");
             $query = $this->db->get();
