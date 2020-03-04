@@ -30,17 +30,9 @@ $this->load->view('templates/header');
 			</div>
 	</div>
         	<div class="form-group">
-		<label for="data" class="col-md-2 control-label">Plurale</label>
+		<label for="data" class="col-md-2 control-label">Nome record</label>
 		<div class="col-md-4">
 			<input type="text" name="fname" value="<?php echo ($this->input->post('fname')); ?>" class="form-control" id="fname" />
-			
-
-			</div>
-	</div>
-            	<div class="form-group">
-		<label for="data" class="col-md-2 control-label">Singolare</label>
-		<div class="col-md-4">
-			<input type="text" name="sname" value="<?php echo ($this->input->post('sname')); ?>" class="form-control" id="sname" />
 			
 
 			</div>
